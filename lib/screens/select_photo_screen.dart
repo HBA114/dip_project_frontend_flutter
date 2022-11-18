@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
@@ -61,8 +62,17 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
                       height: 50,
                       width: 200,
                       child: ElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           //! Send base64 string to Backend and store it on original image variable
+                          try {
+                            var response = await Dio().post(
+                              'http://localhost:5071/api/image',
+                              data: {'base64ImageData': _base64Image},
+                            );
+                            // Navigator.pushNamed(context, routeName);
+                          } catch (e) {
+                            print(e);
+                          }
                         },
                         child: const Text("Next"),
                       ),
