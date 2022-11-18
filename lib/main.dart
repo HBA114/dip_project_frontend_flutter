@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       valueListenable: notifier,
       builder: (_, mode, __) {
         return MaterialApp(
+          title: 'Digital Image Processing',
           theme: ThemeData.dark(),
           routes: {
             SelectPhotoScreen.route: (context) => SelectPhotoScreen(notifier),
@@ -26,15 +27,5 @@ class MyApp extends StatelessWidget {
         );
       },
     );
-
-    // return MaterialApp(
-    //   title: 'Digital Image Processing',
-    //   theme: ThemeData.dark(),
-    //   routes: {
-    //     SelectPhotoScreen.route: (context) => SelectPhotoScreen(notifier),
-    //     ColorFilterScreen.route: (context) => ColorFilterScreen(notifier),
-    //   },
-    //   initialRoute: SelectPhotoScreen.route,
-    // );
   }
 }
