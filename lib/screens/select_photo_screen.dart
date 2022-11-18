@@ -2,19 +2,26 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:dip_project_frontend/screens/color_filter_screen.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 
 class SelectPhotoScreen extends StatefulWidget {
   static String route = "SelectPhotoScreen";
-  const SelectPhotoScreen({super.key});
+  final ValueNotifier<String> notifier;
+
+  const SelectPhotoScreen(this.notifier, {super.key});
 
   @override
-  State<SelectPhotoScreen> createState() => _SelectPhotoScreenState();
+  State<SelectPhotoScreen> createState() => _SelectPhotoScreenState(notifier);
 }
 
 class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
   String _base64Image = "";
+  final ValueNotifier<String> notifier;
+
+  _SelectPhotoScreenState(this.notifier);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,9 +29,9 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
         children: <Widget>[
           Expanded(
             child: Container(
-              child: _base64Image == ""
+              child: notifier.value == ""
                   ? const Text("Select an Image Please...")
-                  : Image.memory(base64Decode(_base64Image)),
+                  : Image.memory(base64Decode(notifier.value)),
             ),
           ),
           Expanded(
@@ -49,6 +56,7 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
 
                           setState(() {
                             _base64Image = base64Encode(bytes!);
+                            notifier.value = base64Encode(bytes);
                           });
                         },
                         child: const Text("Select Image"),
@@ -67,9 +75,12 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
                           try {
                             var response = await Dio().post(
                               'http://localhost:5071/api/image',
-                              data: {'base64ImageData': _base64Image},
+                              data: {'base64ImageData': notifier.value},
                             );
-                            // Navigator.pushNamed(context, routeName);
+
+                            // ignore: use_build_context_synchronously
+                            Navigator.pushNamed(
+                                context, ColorFilterScreen.route);
                           } catch (e) {
                             print(e);
                           }
