@@ -8,19 +8,20 @@ import 'package:flutter/material.dart';
 
 class SelectPhotoScreen extends StatefulWidget {
   static String route = "SelectPhotoScreen";
-  final ValueNotifier<String> notifier;
+  final ValueNotifier<String> imageNotifier;
 
-  const SelectPhotoScreen(this.notifier, {super.key});
+  const SelectPhotoScreen(this.imageNotifier, {super.key});
 
   @override
-  State<SelectPhotoScreen> createState() => _SelectPhotoScreenState(notifier);
+  State<SelectPhotoScreen> createState() =>
+      _SelectPhotoScreenState(imageNotifier);
 }
 
 class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
   String _base64Image = "";
-  final ValueNotifier<String> notifier;
+  final ValueNotifier<String> imageNotifier;
 
-  _SelectPhotoScreenState(this.notifier);
+  _SelectPhotoScreenState(this.imageNotifier);
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +30,9 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
         children: <Widget>[
           Expanded(
             child: Container(
-              child: notifier.value == ""
+              child: imageNotifier.value == ""
                   ? const Text("Select an Image Please...")
-                  : Image.memory(base64Decode(notifier.value)),
+                  : Image.memory(base64Decode(imageNotifier.value)),
             ),
           ),
           Expanded(
@@ -56,7 +57,7 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
 
                           setState(() {
                             _base64Image = base64Encode(bytes!);
-                            notifier.value = base64Encode(bytes);
+                            imageNotifier.value = base64Encode(bytes);
                           });
                         },
                         child: const Text("Select Image"),
@@ -75,7 +76,7 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
                           try {
                             var response = await Dio().post(
                               'http://localhost:5071/api/image',
-                              data: {'base64ImageData': notifier.value},
+                              data: {'base64ImageData': imageNotifier.value},
                             );
 
                             // ignore: use_build_context_synchronously
@@ -85,6 +86,9 @@ class _SelectPhotoScreenState extends State<SelectPhotoScreen> {
                             print(e);
                           }
                         },
+                        style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.green)),
                         child: const Text("Next"),
                       ),
                     ),

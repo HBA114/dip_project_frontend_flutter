@@ -9,19 +9,23 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final ValueNotifier<String> notifier = ValueNotifier("");
+  final ValueNotifier<String> imageNotifier = ValueNotifier("");
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<int> operationIndex = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<String>(
-      valueListenable: notifier,
+      valueListenable: imageNotifier,
       builder: (_, mode, __) {
         return MaterialApp(
           title: 'Digital Image Processing',
           theme: ThemeData.dark(),
           routes: {
-            SelectPhotoScreen.route: (context) => SelectPhotoScreen(notifier),
-            ColorFilterScreen.route: (context) => ColorFilterScreen(notifier),
+            SelectPhotoScreen.route: (context) =>
+                SelectPhotoScreen(imageNotifier),
+            ColorFilterScreen.route: (context) =>
+                ColorFilterScreen(imageNotifier, isLoading, operationIndex),
           },
           initialRoute: SelectPhotoScreen.route,
         );
