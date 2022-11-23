@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dip_project_frontend/layouts/show_photo_layout.dart';
-import 'package:dip_project_frontend/screens/histograms_screen.dart';
+import 'package:dip_project_frontend/screens/histogram_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -14,7 +14,11 @@ class ColorFilterScreen extends StatelessWidget {
   ColorFilterScreen(this.imageNotifier, this.isLoading, this.operationIndex,
       {super.key});
 
-  List<String> dropdownOperations = ['Gray Scale', 'Black&White With Treshold'];
+  List<String> dropdownOperations = [
+    'Select An Option',
+    'Gray Scale',
+    'Black&White With Treshold'
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +72,8 @@ class ColorFilterScreen extends StatelessWidget {
                       .toList(),
                   onChanged: ((item) {
                     selectedItem.value = item!;
-                    operationIndex.value = dropdownOperations.indexOf(item);
+                    int index = dropdownOperations.indexOf(item) - 1;
+                    if (index > 0) operationIndex.value = index;
                   }),
                 );
               }),
@@ -120,7 +125,10 @@ class ColorFilterScreen extends StatelessWidget {
                             'http://localhost:5071/api/image/PreProcessing1',
                             data: {
                               'operationType': operationIndex.value,
-                              'tresholdValue': int.parse(textController.text)
+                              // ignore: unnecessary_null_comparison
+                              'tresholdValue': textController.text != null
+                                  ? int.tryParse(textController.text)
+                                  : 0
                             },
                           );
                           isLoading.value = false;
@@ -142,7 +150,8 @@ class ColorFilterScreen extends StatelessWidget {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, HistogramsScreen.route);
+                        //! dont navigate if did not applied any operations
+                        Navigator.pushNamed(context, HistogramScreen.route);
                       },
                       style: ButtonStyle(
                           backgroundColor:
