@@ -15,7 +15,7 @@ class ColorFilterScreen extends StatelessWidget {
       {super.key});
 
   List<String> dropdownOperations = [
-    'Select An Option',
+    // 'Select An Option',
     'Gray Scale',
     'Black&White With Treshold'
   ];
@@ -24,13 +24,13 @@ class ColorFilterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ShowPhotoLayout(
-          LeftChilds(imageNotifier, isLoading),
-          RightChilds(
+          leftChilds(imageNotifier, isLoading),
+          rightChilds(
               imageNotifier, operationIndex, dropdownOperations, context)),
     );
   }
 
-  LeftChilds(imageNotifier, isLoading) {
+  leftChilds(imageNotifier, isLoading) {
     return ValueListenableBuilder(
       valueListenable: isLoading,
       builder: ((context, value, child) {
@@ -45,7 +45,7 @@ class ColorFilterScreen extends StatelessWidget {
     );
   }
 
-  RightChilds(
+  rightChilds(
       ValueNotifier<String> imageNotifier,
       ValueNotifier<int> operationIndex,
       List<String> dropdownOperations,
@@ -72,8 +72,8 @@ class ColorFilterScreen extends StatelessWidget {
                       .toList(),
                   onChanged: ((item) {
                     selectedItem.value = item!;
-                    int index = dropdownOperations.indexOf(item) - 1;
-                    if (index > 0) operationIndex.value = index;
+                    int index = dropdownOperations.indexOf(item);
+                    if (index >= 0) operationIndex.value = index;
                   }),
                 );
               }),

@@ -27,7 +27,11 @@ class SelectPhotoScreen extends StatelessWidget {
       builder: ((context, value, child) {
         return Container(
           child: imageNotifier.value == ""
-              ? const Text("Select an Image Please...")
+              ? const Center(
+                  child: Text(
+                    "Select an Image Please...",
+                  ),
+                )
               : Image.memory(base64Decode(imageNotifier.value)),
         );
       }),
