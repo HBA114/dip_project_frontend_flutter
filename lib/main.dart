@@ -1,4 +1,5 @@
 import 'package:dip_project_frontend/screens/color_filter_screen.dart';
+import 'package:dip_project_frontend/screens/histograms_screen.dart';
 import 'package:dip_project_frontend/screens/select_photo_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
                 SelectPhotoScreen(imageNotifier),
             ColorFilterScreen.route: (context) =>
                 ColorFilterScreen(imageNotifier, isLoading, operationIndex),
+            HistogramsScreen.route: (context) => HistogramsScreen(),
           },
           initialRoute: SelectPhotoScreen.route,
         );

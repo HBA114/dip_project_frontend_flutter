@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
+import 'package:dip_project_frontend/screens/histograms_screen.dart';
 import 'package:dip_project_frontend/widgets/dropdown_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -241,7 +242,8 @@ class _ColorFilterScreenState extends State<ColorFilterScreen> {
                             width: 200,
                             child: ElevatedButton(
                               onPressed: () {
-                                // Navigator.pushNamed(context, routeName);
+                                Navigator.pushNamed(
+                                    context, HistogramsScreen.route);
                               },
                               style: ButtonStyle(
                                   backgroundColor:
