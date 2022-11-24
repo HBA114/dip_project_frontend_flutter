@@ -1,23 +1,23 @@
 import 'dart:convert';
-import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:dip_project_frontend/layouts/show_photo_layout.dart';
-import 'package:dip_project_frontend/screens/histogram_screen.dart';
+import 'package:dip_project_frontend/screens/save_image_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ColorFilterScreen extends StatelessWidget {
-  static String route = "ColorFilterScreen";
+class MorphologicalsScreen extends StatelessWidget {
+  static String route = "MorphologicalsScreen";
   final ValueNotifier<String> imageNotifier;
-  // final ValueNotifier<bool> isLoading;
-  // final ValueNotifier<int> operationIndex;
-  ColorFilterScreen(this.imageNotifier, {super.key});
+  MorphologicalsScreen(this.imageNotifier, {super.key});
 
   List<String> dropdownOperations = [
-    // 'Select An Option',
-    'Gray Scale',
-    'Black&White With Treshold'
+    'Gaussian Blur Filter',
+    'Sharpness Filter',
+    'Edge Detect Filter',
+    'Mean Filter',
+    'Median Filter',
+    'Contra Harmonical Filter'
   ];
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
@@ -25,9 +25,7 @@ class ColorFilterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ShowPhotoLayout(leftChilds(), rightChilds(context), 'Color Filter'),
-    );
+    return ShowPhotoLayout(leftChilds(), rightChilds(context), 'Filters');
   }
 
   leftChilds() {
@@ -80,13 +78,13 @@ class ColorFilterScreen extends StatelessWidget {
           valueListenable: operationIndex,
           builder: (context, value, child) {
             return Expanded(
-              child: operationIndex.value == 1
+              child: operationIndex.value == 2
                   ? SizedBox(
                       width: 200,
                       child: TextField(
                         controller: textController,
                         decoration: const InputDecoration(
-                          label: Text("Treshold Value"),
+                          label: Text("Tone Count"),
                           border: OutlineInputBorder(),
                         ),
                         // keyboardType: TextInputType.number,
@@ -118,11 +116,11 @@ class ColorFilterScreen extends StatelessWidget {
                         try {
                           isLoading.value = true;
                           var response = await Dio().post(
-                            'http://localhost:5071/api/image/PreProcessing1',
+                            'http://localhost:5071/api/image/PreProcessing2',
                             data: {
                               'operationType': operationIndex.value,
                               // ignore: unnecessary_null_comparison
-                              'tresholdValue': textController.text != null
+                              'toneCount': textController.text != null
                                   ? int.tryParse(textController.text)
                                   : 0
                             },
@@ -130,6 +128,7 @@ class ColorFilterScreen extends StatelessWidget {
                           isLoading.value = false;
                           imageNotifier.value =
                               response.data["base64ModifiedImageData"];
+                          print(response.data["histogram"]);
                         } catch (e) {
                           print(e);
                         }
@@ -147,13 +146,13 @@ class ColorFilterScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () async {
                         //! dont navigate if did not applied any operations
-                        operationIndex.value = 0;
                         await Dio().post(
                             'http://localhost:5071/api/image/NextPage',
                             data: {'base64ImageData': imageNotifier.value});
+                        operationIndex.value = 0;
                         // ignore: use_build_context_synchronously
                         Navigator.pushReplacementNamed(
-                            context, HistogramScreen.route);
+                            context, SaveImageScreen.route);
                       },
                       style: ButtonStyle(
                           backgroundColor:

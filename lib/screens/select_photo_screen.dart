@@ -10,18 +10,19 @@ import 'package:flutter/material.dart';
 class SelectPhotoScreen extends StatelessWidget {
   static String route = "SelectPhotoScreen";
   final ValueNotifier<String> imageNotifier;
-
-  const SelectPhotoScreen(this.imageNotifier, {super.key});
+  final ValueNotifier<String> fileTypeNotifier;
+  const SelectPhotoScreen(this.imageNotifier, this.fileTypeNotifier,
+      {super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ShowPhotoLayout(
-          ShowPhoto(imageNotifier), ShowRightPanel(imageNotifier, context)),
+      body:
+          ShowPhotoLayout(ShowPhoto(), ShowRightPanel(context), 'Select Photo'),
     );
   }
 
-  ShowPhoto(imageNotifier) {
+  ShowPhoto() {
     return ValueListenableBuilder(
       valueListenable: imageNotifier,
       builder: ((context, value, child) {
@@ -38,7 +39,7 @@ class SelectPhotoScreen extends StatelessWidget {
     );
   }
 
-  ShowRightPanel(imageNotifier, context) {
+  ShowRightPanel(context) {
     return Column(
       children: [
         Expanded(
@@ -57,7 +58,10 @@ class SelectPhotoScreen extends StatelessWidget {
                         acceptedTypeGroups: <XTypeGroup>[typeGroup]);
 
                     Uint8List? bytes = await file?.readAsBytes();
-
+                    if (file != null) {
+                      fileTypeNotifier.value = file.name.split(".").last;
+                      print(fileTypeNotifier.value);
+                    }
                     imageNotifier.value = base64Encode(bytes!);
                   } catch (e) {
                     print(e);
@@ -79,11 +83,15 @@ class SelectPhotoScreen extends StatelessWidget {
                   try {
                     var response = await Dio().post(
                       'http://localhost:5071/api/image',
-                      data: {'base64ImageData': imageNotifier.value},
+                      data: {
+                        'base64ImageData': imageNotifier.value,
+                        'fileType': fileTypeNotifier.value
+                      },
                     );
 
                     // ignore: use_build_context_synchronously
-                    Navigator.pushNamed(context, ColorFilterScreen.route);
+                    Navigator.pushReplacementNamed(
+                        context, ColorFilterScreen.route);
                   } catch (e) {
                     print(e);
                   }

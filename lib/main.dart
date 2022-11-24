@@ -1,4 +1,5 @@
 import 'package:dip_project_frontend/screens/color_filter_screen.dart';
+import 'package:dip_project_frontend/screens/filters_screen.dart';
 import 'package:dip_project_frontend/screens/histogram_screen.dart';
 import 'package:dip_project_frontend/screens/select_photo_screen.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final ValueNotifier<String> imageNotifier = ValueNotifier("");
-  final ValueNotifier<bool> isLoading = ValueNotifier(false);
-  final ValueNotifier<int> operationIndex = ValueNotifier(0);
+  final ValueNotifier<String> fileTypeNotifier = ValueNotifier("");
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +24,11 @@ class MyApp extends StatelessWidget {
           theme: ThemeData.dark(),
           routes: {
             SelectPhotoScreen.route: (context) =>
-                SelectPhotoScreen(imageNotifier),
+                SelectPhotoScreen(imageNotifier, fileTypeNotifier),
             ColorFilterScreen.route: (context) =>
-                ColorFilterScreen(imageNotifier, isLoading, operationIndex),
+                ColorFilterScreen(imageNotifier),
             HistogramScreen.route: (context) => HistogramScreen(imageNotifier),
+            FiltersScreen.route: (context) => FiltersScreen(imageNotifier),
           },
           initialRoute: SelectPhotoScreen.route,
         );
