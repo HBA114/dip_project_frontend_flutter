@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dip_project_frontend/layouts/show_photo_layout.dart';
+import 'package:dip_project_frontend/screens/filters_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -164,7 +165,7 @@ class HistogramScreen extends StatelessWidget {
                         operationIndex.value = 0;
                         // ignore: use_build_context_synchronously
                         Navigator.pushReplacementNamed(
-                            context, HistogramScreen.route);
+                            context, FiltersScreen.route);
                       },
                       style: ButtonStyle(
                           backgroundColor:

@@ -11,14 +11,7 @@ class MorphologicalsScreen extends StatelessWidget {
   final ValueNotifier<String> imageNotifier;
   MorphologicalsScreen(this.imageNotifier, {super.key});
 
-  List<String> dropdownOperations = [
-    'Gaussian Blur Filter',
-    'Sharpness Filter',
-    'Edge Detect Filter',
-    'Mean Filter',
-    'Median Filter',
-    'Contra Harmonical Filter'
-  ];
+  List<String> dropdownOperations = ['Erosion', 'Dilation', 'Skeletonization'];
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);

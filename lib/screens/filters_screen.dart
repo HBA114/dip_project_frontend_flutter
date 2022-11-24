@@ -78,13 +78,13 @@ class FiltersScreen extends StatelessWidget {
           valueListenable: operationIndex,
           builder: (context, value, child) {
             return Expanded(
-              child: operationIndex.value == 2
+              child: operationIndex.value == 0
                   ? SizedBox(
                       width: 200,
                       child: TextField(
                         controller: textController,
                         decoration: const InputDecoration(
-                          label: Text("Tone Count"),
+                          label: Text("Standart Deviation"),
                           border: OutlineInputBorder(),
                         ),
                         // keyboardType: TextInputType.number,
@@ -116,11 +116,11 @@ class FiltersScreen extends StatelessWidget {
                         try {
                           isLoading.value = true;
                           var response = await Dio().post(
-                            'http://localhost:5071/api/image/PreProcessing2',
+                            'http://localhost:5071/api/image/Filters',
                             data: {
-                              'operationType': operationIndex.value,
+                              'filterType': operationIndex.value,
                               // ignore: unnecessary_null_comparison
-                              'toneCount': textController.text != null
+                              'standartDeviation': textController.text != null
                                   ? int.tryParse(textController.text)
                                   : 0
                             },
@@ -128,7 +128,6 @@ class FiltersScreen extends StatelessWidget {
                           isLoading.value = false;
                           imageNotifier.value =
                               response.data["base64ModifiedImageData"];
-                          print(response.data["histogram"]);
                         } catch (e) {
                           print(e);
                         }
