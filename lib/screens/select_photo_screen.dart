@@ -89,6 +89,14 @@ class SelectPhotoScreen extends StatelessWidget {
                       },
                     );
 
+                    // var response = await Dio().post(
+                    //   'http://127.0.0.1:8000/',
+                    //   data: {
+                    //     'base64Image': imageNotifier.value,
+                    //     'base64ModifiedImage': imageNotifier.value
+                    //   },
+                    // );
+                    // print(response);
                     // ignore: use_build_context_synchronously
                     Navigator.pushReplacementNamed(
                         context, ColorFilterScreen.route);

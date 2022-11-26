@@ -18,7 +18,8 @@ class MorphologicalsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ShowPhotoLayout(leftChilds(), rightChilds(context), 'Filters');
+    return ShowPhotoLayout(
+        leftChilds(), rightChilds(context), 'Morphologicals');
   }
 
   leftChilds() {

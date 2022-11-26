@@ -1,6 +1,8 @@
 import 'package:dip_project_frontend/screens/color_filter_screen.dart';
 import 'package:dip_project_frontend/screens/filters_screen.dart';
 import 'package:dip_project_frontend/screens/histogram_screen.dart';
+import 'package:dip_project_frontend/screens/morphologicals_screen.dart';
+import 'package:dip_project_frontend/screens/save_image_screen.dart';
 import 'package:dip_project_frontend/screens/select_photo_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
                 ColorFilterScreen(imageNotifier),
             HistogramScreen.route: (context) => HistogramScreen(imageNotifier),
             FiltersScreen.route: (context) => FiltersScreen(imageNotifier),
+            MorphologicalsScreen.route: (context) =>
+                MorphologicalsScreen(imageNotifier),
+            SaveImageScreen.route: (context) => SaveImageScreen(imageNotifier)
           },
           initialRoute: SelectPhotoScreen.route,
         );
