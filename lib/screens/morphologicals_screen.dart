@@ -68,34 +68,34 @@ class MorphologicalsScreen extends StatelessWidget {
             ),
           ),
         ),
-        ValueListenableBuilder(
-          valueListenable: operationIndex,
-          builder: (context, value, child) {
-            return Expanded(
-              child: operationIndex.value == 2
-                  ? SizedBox(
-                      width: 200,
-                      child: TextField(
-                        controller: textController,
-                        decoration: const InputDecoration(
-                          label: Text("Tone Count"),
-                          border: OutlineInputBorder(),
-                        ),
-                        // keyboardType: TextInputType.number,
-                        autocorrect: false,
-                        enableSuggestions: false,
-                        inputFormatters: [
-                          FilteringTextInputFormatter(
-                            RegExp(r'[0-9]'),
-                            allow: true,
-                          ),
-                        ],
-                      ),
-                    )
-                  : Container(),
-            );
-          },
-        ),
+        // ValueListenableBuilder(
+        //   valueListenable: operationIndex,
+        //   builder: (context, value, child) {
+        //     return Expanded(
+        //       child: operationIndex.value == -1
+        //           ? SizedBox(
+        //               width: 200,
+        //               child: TextField(
+        //                 controller: textController,
+        //                 decoration: const InputDecoration(
+        //                   label: Text("Tone Count"),
+        //                   border: OutlineInputBorder(),
+        //                 ),
+        //                 // keyboardType: TextInputType.number,
+        //                 autocorrect: false,
+        //                 enableSuggestions: false,
+        //                 inputFormatters: [
+        //                   FilteringTextInputFormatter(
+        //                     RegExp(r'[0-9]'),
+        //                     allow: true,
+        //                   ),
+        //                 ],
+        //               ),
+        //             )
+        //           : Container(),
+        //     );
+        //   },
+        // ),
         Expanded(
           child: Row(
             children: [
@@ -110,13 +110,9 @@ class MorphologicalsScreen extends StatelessWidget {
                         try {
                           isLoading.value = true;
                           var response = await Dio().post(
-                            'http://localhost:5071/api/image/PreProcessing2',
+                            'http://localhost:5071/api/image/Morphological',
                             data: {
                               'operationType': operationIndex.value,
-                              // ignore: unnecessary_null_comparison
-                              'toneCount': textController.text != null
-                                  ? int.tryParse(textController.text)
-                                  : 0
                             },
                           );
                           isLoading.value = false;
