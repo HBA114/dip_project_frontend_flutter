@@ -22,6 +22,13 @@ class HistogramScreen extends StatelessWidget {
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);
+  Map<int, int> histogram = {
+    0: 0,
+  };
+  // final Map<String, int> someMap = {
+  //   "a": 1,
+  //   "b": 2,
+  // };
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +46,29 @@ class HistogramScreen extends StatelessWidget {
             ? const Center(child: CircularProgressIndicator())
             : ValueListenableBuilder(
                 valueListenable: imageNotifier,
-                builder: (context, value, child) =>
-                    Image.memory(base64Decode(imageNotifier.value)),
+                builder: (context, value, child) => Column(children: [
+                  Expanded(
+                    child: Image.memory(
+                      base64Decode(imageNotifier.value),
+                    ),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: 256,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ListTile(
+                          title: Text(index.toString()),
+                          trailing: Text(histogram[index] == null
+                              ? "0"
+                              : histogram[index].toString()),
+                        );
+                      },
+                    ),
+                  ),
+                ]),
               );
       }),
     );
-    // return Column(
-    //   children: const [
-    //     Expanded(
-    //       child: Center(child: Text("Image")),
-    //     ),
-    //     Expanded(
-    //       child: Center(child: Text("Histogram")),
-    //     )
-    //   ],
-    // );
   }
 
   rightChilds(BuildContext context) {
@@ -142,6 +157,19 @@ class HistogramScreen extends StatelessWidget {
                           imageNotifier.value =
                               response.data["base64ModifiedImageData"];
                           print(response.data["histogram"]);
+                          print(response.data["histogram"]["0"]);
+                          print(response.data["histogram"].length);
+                          for (int i = 0; i < 256; i++) {
+                            if (response.data["histogram"][i.toString()] !=
+                                null) {
+                              histogram[i] =
+                                  response.data["histogram"][i.toString()];
+                            } else {
+                              histogram[i] = 0;
+                            }
+                          }
+
+                          print(histogram);
                         } catch (e) {
                           print(e);
                         }
