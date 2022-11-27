@@ -20,8 +20,12 @@ class FiltersScreen extends StatelessWidget {
     'Contra Harmonical Filter'
   ];
 
+  List<String> filterSizes = ['3x3', '5x5', '9x9'];
+  List<int> filterSizeValues = [3, 5, 9];
+
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);
+  ValueNotifier<int> filterIndex = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
@@ -45,6 +49,7 @@ class FiltersScreen extends StatelessWidget {
 
   rightChilds(BuildContext context) {
     ValueNotifier<String> selectedItem = ValueNotifier(dropdownOperations[0]);
+    ValueNotifier<String> selectedFilterSize = ValueNotifier(filterSizes[0]);
     TextEditingController textController = TextEditingController();
     return Column(
       children: <Widget>[
@@ -98,7 +103,29 @@ class FiltersScreen extends StatelessWidget {
                         ],
                       ),
                     )
-                  : Container(),
+                  : operationIndex.value == 3 || operationIndex.value == 4
+                      ? ValueListenableBuilder(
+                          valueListenable: selectedFilterSize,
+                          builder: ((context, value, child) {
+                            return DropdownButton<String>(
+                              value: selectedFilterSize.value,
+                              items: filterSizes
+                                  .map(
+                                    (item) => DropdownMenuItem(
+                                      value: item,
+                                      child: Text(item),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: ((item) {
+                                selectedFilterSize.value = item!;
+                                int index = filterSizes.indexOf(item);
+                                if (index >= 0) filterIndex.value = index;
+                              }),
+                            );
+                          }),
+                        )
+                      : Container(),
             );
           },
         ),
@@ -120,6 +147,7 @@ class FiltersScreen extends StatelessWidget {
                             data: {
                               'filterType': operationIndex.value,
                               // ignore: unnecessary_null_comparison
+                              'filterSize': filterSizeValues[filterIndex.value],
                               'standartDeviation': textController.text != null
                                   ? int.tryParse(textController.text)
                                   : 0

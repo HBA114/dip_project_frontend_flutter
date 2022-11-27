@@ -116,9 +116,6 @@ class SaveImageScreen extends StatelessWidget {
                             },
                           );
                           isLoading.value = false;
-                          // imageNotifier.value =
-                          //     response.data["base64ModifiedImageData"];
-                          // print(response.data["histogram"]);
                         } catch (e) {
                           print(e);
                         }
@@ -128,31 +125,6 @@ class SaveImageScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              // Expanded(
-              //   child: Center(
-              //     child: SizedBox(
-              //       height: 50,
-              //       width: 200,
-              //       child: ElevatedButton(
-              //         onPressed: () async {
-              //           //! dont navigate if did not applied any operations
-              //           await Dio().post(
-              //               'http://localhost:5071/api/image/NextPage',
-              //               data: {'base64ImageData': imageNotifier.value});
-              //           operationIndex.value = 0;
-              //           // ignore: use_build_context_synchronously
-              //           //! Save Image
-              //           // Navigator.pushReplacementNamed(
-              //           //     context, HistogramScreen.route);
-              //         },
-              //         style: ButtonStyle(
-              //             backgroundColor:
-              //                 MaterialStateProperty.all<Color>(Colors.green)),
-              //         child: const Text("Save"),
-              //       ),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
