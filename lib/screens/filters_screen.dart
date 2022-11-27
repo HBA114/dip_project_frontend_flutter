@@ -103,7 +103,9 @@ class FiltersScreen extends StatelessWidget {
                         ],
                       ),
                     )
-                  : operationIndex.value == 3 || operationIndex.value == 4
+                  : operationIndex.value == 3 ||
+                          operationIndex.value == 4 ||
+                          operationIndex.value == 1
                       ? ValueListenableBuilder(
                           valueListenable: selectedFilterSize,
                           builder: ((context, value, child) {

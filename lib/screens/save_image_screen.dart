@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:dip_project_frontend/layouts/show_photo_layout.dart';
+import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -66,34 +67,6 @@ class SaveImageScreen extends StatelessWidget {
             ),
           ),
         ),
-        // ValueListenableBuilder(
-        //   valueListenable: operationIndex,
-        //   builder: (context, value, child) {
-        //     return Expanded(
-        //       child: operationIndex.value == -1
-        //           ? SizedBox(
-        //               width: 200,
-        //               child: TextField(
-        //                 controller: textController,
-        //                 decoration: const InputDecoration(
-        //                   label: Text("Tone Count"),
-        //                   border: OutlineInputBorder(),
-        //                 ),
-        //                 // keyboardType: TextInputType.number,
-        //                 autocorrect: false,
-        //                 enableSuggestions: false,
-        //                 inputFormatters: [
-        //                   FilteringTextInputFormatter(
-        //                     RegExp(r'[0-9]'),
-        //                     allow: true,
-        //                   ),
-        //                 ],
-        //               ),
-        //             )
-        //           : Container(),
-        //     );
-        //   },
-        // ),
         Expanded(
           child: Row(
             children: [
@@ -106,15 +79,20 @@ class SaveImageScreen extends StatelessWidget {
                       onPressed: () async {
                         //! Send base64 string to Backend and store it on original image variable
                         try {
+                          String fileName =
+                              'modifiedImage.${dropdownOperations[operationIndex.value]}';
+                          final String? path =
+                              await getSavePath(suggestedName: fileName);
                           isLoading.value = true;
-                          var response = await Dio().post(
-                            'http://localhost:5071/api/image/SaveFile',
-                            data: {
-                              'base64ImageData': imageNotifier.value,
-                              'fileType':
-                                  dropdownOperations[operationIndex.value]
-                            },
-                          );
+                          if (path != null) {
+                            var response = await Dio().post(
+                              'http://localhost:5071/api/image/SaveFile',
+                              data: {
+                                'base64ImageData': imageNotifier.value,
+                                'filePath': path
+                              },
+                            );
+                          }
                           isLoading.value = false;
                         } catch (e) {
                           print(e);
