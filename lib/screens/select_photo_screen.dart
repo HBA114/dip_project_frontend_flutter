@@ -51,7 +51,7 @@ class SelectPhotoScreen extends StatelessWidget {
                 onPressed: () async {
                   const XTypeGroup typeGroup = XTypeGroup(
                     label: 'images',
-                    extensions: <String>['jpg', 'jpeg', 'png'],
+                    extensions: <String>['jpg', 'jpeg', 'png', 'bmp'],
                   );
                   try {
                     final XFile? file = await openFile(
