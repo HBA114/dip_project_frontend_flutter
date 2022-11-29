@@ -11,7 +11,7 @@ class SaveImageScreen extends StatelessWidget {
   final ValueNotifier<String> imageNotifier;
   SaveImageScreen(this.imageNotifier, {super.key});
 
-  List<String> dropdownOperations = ['jpeg', 'jpg', 'png'];
+  List<String> dropdownOperations = ['jpeg', 'jpg', 'png', 'bmp'];
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);
