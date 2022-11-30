@@ -22,7 +22,13 @@ class HistogramScreen extends StatelessWidget {
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);
-  Map<int, int> histogram = {
+  Map<int, int> histogramRed = {
+    0: 0,
+  };
+  Map<int, int> histogramGreen = {
+    0: 0,
+  };
+  Map<int, int> histogramBlue = {
     0: 0,
   };
   // final Map<String, int> someMap = {
@@ -58,9 +64,37 @@ class HistogramScreen extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           title: Text(index.toString()),
-                          trailing: Text(histogram[index] == null
-                              ? "0"
-                              : histogram[index].toString()),
+                          trailing: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  const Text("Red"),
+                                  Text(histogramRed[index] == null
+                                      ? "0"
+                                      : histogramRed[index].toString()),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const Text("Green"),
+                                  Text(histogramGreen[index] == null
+                                      ? "0"
+                                      : histogramGreen[index].toString()),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  const Text("Blue"),
+                                  Text(histogramBlue[index] == null
+                                      ? "0"
+                                      : histogramBlue[index].toString()),
+                                ],
+                              ),
+                            ],
+                          ),
+                          // trailing: Text(histogram[index] == null
+                          //     ? "0"
+                          //     : histogram[index].toString()), //!!
                         );
                       },
                     ),
@@ -156,20 +190,36 @@ class HistogramScreen extends StatelessWidget {
                           isLoading.value = false;
                           imageNotifier.value =
                               response.data["base64ModifiedImageData"];
-                          print(response.data["histogram"]);
-                          print(response.data["histogram"]["0"]);
-                          print(response.data["histogram"].length);
+                          // print(response.data["histogram"]);
+                          // print(response.data["histogram"]["0"]);
+                          // print(response.data["histogram"].length);
                           for (int i = 0; i < 256; i++) {
-                            if (response.data["histogram"][i.toString()] !=
+                            if (response.data["histogramRed"][i.toString()] !=
                                 null) {
-                              histogram[i] =
-                                  response.data["histogram"][i.toString()];
+                              histogramRed[i] =
+                                  response.data["histogramRed"][i.toString()];
                             } else {
-                              histogram[i] = 0;
+                              histogramRed[i] = 0;
+                            }
+
+                            if (response.data["histogramGreen"][i.toString()] !=
+                                null) {
+                              histogramGreen[i] =
+                                  response.data["histogramGreen"][i.toString()];
+                            } else {
+                              histogramGreen[i] = 0;
+                            }
+
+                            if (response.data["histogramBlue"][i.toString()] !=
+                                null) {
+                              histogramBlue[i] =
+                                  response.data["histogramBlue"][i.toString()];
+                            } else {
+                              histogramBlue[i] = 0;
                             }
                           }
 
-                          print(histogram);
+                          // print(histogram);
                         } catch (e) {
                           print(e);
                         }
