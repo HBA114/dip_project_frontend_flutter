@@ -23,6 +23,8 @@ class HistogramScreen extends StatelessWidget {
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);
   ValueNotifier<bool> canContinue = ValueNotifier(false);
+  ValueNotifier<bool> isGray = ValueNotifier(true);
+
   Map<int, int> histogramRed = {
     0: 0,
   };
@@ -55,51 +57,29 @@ class HistogramScreen extends StatelessWidget {
                       base64Decode(imageNotifier.value),
                     ),
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: 256,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text(index.toString()),
-                          trailing: Text(
-                              // ignore: prefer_interpolation_to_compose_strings
-                              "Red: ${histogramRed[index] == null ? "0" : histogramRed[index].toString()}"
-                              ", Green: ${histogramGreen[index] == null ? "0" : histogramGreen[index].toString()}"
-                              ", Blue: ${histogramBlue[index] == null ? "0" : histogramBlue[index].toString()}"),
-                          // trailing: Row(
-                          //   children: [
-                          //     Column(
-                          //       children: [
-                          //         const Text("Red"),
-                          //         Text(histogramRed[index] == null
-                          //             ? "0"
-                          //             : histogramRed[index].toString()),
-                          //       ],
-                          //     ),
-                          //     Column(
-                          //       children: [
-                          //         const Text("Green"),
-                          //         Text(histogramGreen[index] == null
-                          //             ? "0"
-                          //             : histogramGreen[index].toString()),
-                          //       ],
-                          //     ),
-                          //     Column(
-                          //       children: [
-                          //         const Text("Blue"),
-                          //         Text(histogramBlue[index] == null
-                          //             ? "0"
-                          //             : histogramBlue[index].toString()),
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ),
-                          // trailing: Text(histogram[index] == null
-                          //     ? "0"
-                          //     : histogram[index].toString()), //!!
-                        );
-                      },
-                    ),
+                  ValueListenableBuilder(
+                    valueListenable: isGray,
+                    builder: (context, value, child) {
+                      return Expanded(
+                        child: ListView.builder(
+                          itemCount: 256,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ListTile(
+                              title: Text(index.toString()),
+                              trailing: isGray.value
+                                  ? Text(histogramRed[index] == null
+                                      ? "0"
+                                      : histogramRed[index].toString())
+                                  : Text(
+                                      // ignore: prefer_interpolation_to_compose_strings
+                                      "Red: ${histogramRed[index] == null ? "0" : histogramRed[index].toString()}"
+                                      ", Green: ${histogramGreen[index] == null ? "0" : histogramGreen[index].toString()}"
+                                      ", Blue: ${histogramBlue[index] == null ? "0" : histogramBlue[index].toString()}"),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                 ]),
               );
@@ -218,6 +198,11 @@ class HistogramScreen extends StatelessWidget {
                                   response.data["histogramBlue"][i.toString()];
                             } else {
                               histogramBlue[i] = 0;
+                            }
+
+                            if (histogramRed[i] != histogramGreen[i] ||
+                                histogramRed[i] != histogramBlue[i]) {
+                              isGray.value = false;
                             }
                           }
                           canContinue.value = true;
