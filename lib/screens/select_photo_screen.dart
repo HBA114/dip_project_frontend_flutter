@@ -11,8 +11,9 @@ class SelectPhotoScreen extends StatelessWidget {
   static String route = "SelectPhotoScreen";
   final ValueNotifier<String> imageNotifier;
   final ValueNotifier<String> fileTypeNotifier;
-  const SelectPhotoScreen(this.imageNotifier, this.fileTypeNotifier,
-      {super.key});
+  SelectPhotoScreen(this.imageNotifier, this.fileTypeNotifier, {super.key});
+
+  ValueNotifier<bool> canContinue = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -24,10 +25,10 @@ class SelectPhotoScreen extends StatelessWidget {
 
   ShowPhoto() {
     return ValueListenableBuilder(
-      valueListenable: imageNotifier,
+      valueListenable: canContinue,
       builder: ((context, value, child) {
         return Container(
-          child: imageNotifier.value == ""
+          child: !canContinue.value
               ? const Center(
                   child: Text(
                     "Select an Image Please...",
@@ -63,6 +64,7 @@ class SelectPhotoScreen extends StatelessWidget {
                       print(fileTypeNotifier.value);
                     }
                     imageNotifier.value = base64Encode(bytes!);
+                    canContinue.value = true;
                   } catch (e) {
                     print(e);
                   }
@@ -77,37 +79,35 @@ class SelectPhotoScreen extends StatelessWidget {
             child: SizedBox(
               height: 50,
               width: 200,
-              child: ElevatedButton(
-                onPressed: () async {
-                  //! Send base64 string to Backend and store it on original image variable
-                  try {
-                    var response = await Dio().post(
-                      'http://localhost:5071/api/image',
-                      data: {
-                        'base64ImageData': imageNotifier.value,
-                        'fileType': fileTypeNotifier.value
-                      },
-                    );
-
-                    // var response = await Dio().post(
-                    //   'http://127.0.0.1:8000/',
-                    //   data: {
-                    //     'base64Image': imageNotifier.value,
-                    //     'base64ModifiedImage': imageNotifier.value
-                    //   },
-                    // );
-                    // print(response);
-                    // ignore: use_build_context_synchronously
-                    Navigator.pushReplacementNamed(
-                        context, ColorFilterScreen.route);
-                  } catch (e) {
-                    print(e);
-                  }
+              child: ValueListenableBuilder(
+                valueListenable: canContinue,
+                builder: (context, value, child) {
+                  return ElevatedButton(
+                    onPressed: () async {
+                      //! Send base64 string to Backend and store it on original image variable
+                      if (canContinue.value) {
+                        try {
+                          var response = await Dio().post(
+                            'http://localhost:5071/api/image',
+                            data: {
+                              'base64ImageData': imageNotifier.value,
+                              'fileType': fileTypeNotifier.value
+                            },
+                          );
+                          // ignore: use_build_context_synchronously
+                          Navigator.pushReplacementNamed(
+                              context, ColorFilterScreen.route);
+                        } catch (e) {
+                          print(e);
+                        }
+                      }
+                    },
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            canContinue.value ? Colors.green : Colors.red)),
+                    child: const Text("Next"),
+                  );
                 },
-                style: ButtonStyle(
-                    backgroundColor:
-                        MaterialStateProperty.all<Color>(Colors.green)),
-                child: const Text("Next"),
               ),
             ),
           ),

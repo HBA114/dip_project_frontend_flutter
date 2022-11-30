@@ -22,6 +22,7 @@ class HistogramScreen extends StatelessWidget {
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);
+  ValueNotifier<bool> canContinue = ValueNotifier(false);
   Map<int, int> histogramRed = {
     0: 0,
   };
@@ -31,10 +32,6 @@ class HistogramScreen extends StatelessWidget {
   Map<int, int> histogramBlue = {
     0: 0,
   };
-  // final Map<String, int> someMap = {
-  //   "a": 1,
-  //   "b": 2,
-  // };
 
   @override
   Widget build(BuildContext context) {
@@ -64,34 +61,39 @@ class HistogramScreen extends StatelessWidget {
                       itemBuilder: (BuildContext context, int index) {
                         return ListTile(
                           title: Text(index.toString()),
-                          trailing: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  const Text("Red"),
-                                  Text(histogramRed[index] == null
-                                      ? "0"
-                                      : histogramRed[index].toString()),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Text("Green"),
-                                  Text(histogramGreen[index] == null
-                                      ? "0"
-                                      : histogramGreen[index].toString()),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  const Text("Blue"),
-                                  Text(histogramBlue[index] == null
-                                      ? "0"
-                                      : histogramBlue[index].toString()),
-                                ],
-                              ),
-                            ],
-                          ),
+                          trailing: Text(
+                              // ignore: prefer_interpolation_to_compose_strings
+                              "Red: ${histogramRed[index] == null ? "0" : histogramRed[index].toString()}"
+                              ", Green: ${histogramGreen[index] == null ? "0" : histogramGreen[index].toString()}"
+                              ", Blue: ${histogramBlue[index] == null ? "0" : histogramBlue[index].toString()}"),
+                          // trailing: Row(
+                          //   children: [
+                          //     Column(
+                          //       children: [
+                          //         const Text("Red"),
+                          //         Text(histogramRed[index] == null
+                          //             ? "0"
+                          //             : histogramRed[index].toString()),
+                          //       ],
+                          //     ),
+                          //     Column(
+                          //       children: [
+                          //         const Text("Green"),
+                          //         Text(histogramGreen[index] == null
+                          //             ? "0"
+                          //             : histogramGreen[index].toString()),
+                          //       ],
+                          //     ),
+                          //     Column(
+                          //       children: [
+                          //         const Text("Blue"),
+                          //         Text(histogramBlue[index] == null
+                          //             ? "0"
+                          //             : histogramBlue[index].toString()),
+                          //       ],
+                          //     ),
+                          //   ],
+                          // ),
                           // trailing: Text(histogram[index] == null
                           //     ? "0"
                           //     : histogram[index].toString()), //!!
@@ -218,7 +220,7 @@ class HistogramScreen extends StatelessWidget {
                               histogramBlue[i] = 0;
                             }
                           }
-
+                          canContinue.value = true;
                           // print(histogram);
                         } catch (e) {
                           print(e);
@@ -234,21 +236,36 @@ class HistogramScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 50,
                     width: 200,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        //! dont navigate if did not applied any operations
-                        await Dio().post(
-                            'http://localhost:5071/api/image/NextPage',
-                            data: {'base64ImageData': imageNotifier.value});
-                        operationIndex.value = 0;
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacementNamed(
-                            context, FiltersScreen.route);
+                    child: ValueListenableBuilder(
+                      valueListenable: canContinue,
+                      builder: (context, value, child) {
+                        return ElevatedButton(
+                          onPressed: () async {
+                            //! Send base64 string to Backend and store it on original image variable
+                            if (canContinue.value) {
+                              try {
+                                var response = await Dio().post(
+                                  'http://localhost:5071/api/image/NextPage',
+                                  data: {
+                                    'base64ImageData': imageNotifier.value
+                                  },
+                                );
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushReplacementNamed(
+                                    context, FiltersScreen.route);
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  canContinue.value
+                                      ? Colors.green
+                                      : Colors.red)),
+                          child: const Text("Next"),
+                        );
                       },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.green)),
-                      child: const Text("Next"),
                     ),
                   ),
                 ),

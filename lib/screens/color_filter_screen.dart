@@ -22,6 +22,7 @@ class ColorFilterScreen extends StatelessWidget {
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
   ValueNotifier<int> operationIndex = ValueNotifier(0);
+  ValueNotifier<bool> canContinue = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +129,7 @@ class ColorFilterScreen extends StatelessWidget {
                             },
                           );
                           isLoading.value = false;
+                          canContinue.value = true;
                           imageNotifier.value =
                               response.data["base64ModifiedImageData"];
                         } catch (e) {
@@ -144,21 +146,36 @@ class ColorFilterScreen extends StatelessWidget {
                   child: SizedBox(
                     height: 50,
                     width: 200,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        //! dont navigate if did not applied any operations
-                        operationIndex.value = 0;
-                        await Dio().post(
-                            'http://localhost:5071/api/image/NextPage',
-                            data: {'base64ImageData': imageNotifier.value});
-                        // ignore: use_build_context_synchronously
-                        Navigator.pushReplacementNamed(
-                            context, HistogramScreen.route);
+                    child: ValueListenableBuilder(
+                      valueListenable: canContinue,
+                      builder: (context, value, child) {
+                        return ElevatedButton(
+                          onPressed: () async {
+                            //! Send base64 string to Backend and store it on original image variable
+                            if (canContinue.value) {
+                              try {
+                                var response = await Dio().post(
+                                  'http://localhost:5071/api/image/NextPage',
+                                  data: {
+                                    'base64ImageData': imageNotifier.value
+                                  },
+                                );
+                                // ignore: use_build_context_synchronously
+                                Navigator.pushReplacementNamed(
+                                    context, HistogramScreen.route);
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
+                          },
+                          style: ButtonStyle(
+                              backgroundColor: MaterialStateProperty.all<Color>(
+                                  canContinue.value
+                                      ? Colors.green
+                                      : Colors.red)),
+                          child: const Text("Next"),
+                        );
                       },
-                      style: ButtonStyle(
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.green)),
-                      child: const Text("Next"),
                     ),
                   ),
                 ),
