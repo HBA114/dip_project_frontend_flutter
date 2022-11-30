@@ -17,7 +17,8 @@ class ColorFilterScreen extends StatelessWidget {
   List<String> dropdownOperations = [
     // 'Select An Option',
     'Gray Scale',
-    'Black&White With Treshold'
+    'Black&White With Treshold',
+    'Leave It As Is'
   ];
 
   ValueNotifier<bool> isLoading = ValueNotifier(false);
@@ -71,6 +72,8 @@ class ColorFilterScreen extends StatelessWidget {
                     selectedItem.value = item!;
                     int index = dropdownOperations.indexOf(item);
                     if (index >= 0) operationIndex.value = index;
+                    // ignore: unrelated_type_equality_checks
+                    if (operationIndex.value == 2) canContinue.value = true;
                   }),
                 );
               }),

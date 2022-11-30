@@ -13,7 +13,7 @@ class FiltersScreen extends StatelessWidget {
 
   List<String> dropdownOperations = [
     'Gaussian Blur Filter',
-    'Sharpness Filter',
+    'Sharpening Filter',
     'Edge Detect Filter',
     'Mean Filter',
     'Median Filter',
