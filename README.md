@@ -1,16 +1,10 @@
 # dip_project_frontend
 
-A new Flutter project.
+A Flutter project for Digital Image Processing class. For backend code visit [DIP_Backend_ASP.NET](https://github.com/HBA114/DIP_Backend_ASP.NET) repository.
 
-## Getting Started
+# Dependecies
+- [file_selector](https://pub.dev/packages/file_selector)
+- [dio](https://pub.dev/packages/dio)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Supported Platforms
+- This application developed as desktop application. Tested on Windows and Linux. If you enable MacOS for this project it will run on MacOS too.
