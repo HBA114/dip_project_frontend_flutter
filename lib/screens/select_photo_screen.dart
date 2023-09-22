@@ -11,19 +11,20 @@ class SelectPhotoScreen extends StatelessWidget {
   static String route = "SelectPhotoScreen";
   final ValueNotifier<String> imageNotifier;
   final ValueNotifier<String> fileTypeNotifier;
+
   SelectPhotoScreen(this.imageNotifier, this.fileTypeNotifier, {super.key});
 
-  ValueNotifier<bool> canContinue = ValueNotifier(false);
+  final ValueNotifier<bool> canContinue = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body:
-          ShowPhotoLayout(ShowPhoto(), ShowRightPanel(context), 'Select Photo'),
+          ShowPhotoLayout(showPhoto(), showRightPanel(context), 'Select Photo'),
     );
   }
 
-  ShowPhoto() {
+  showPhoto() {
     return ValueListenableBuilder(
       valueListenable: canContinue,
       builder: ((context, value, child) {
@@ -40,7 +41,7 @@ class SelectPhotoScreen extends StatelessWidget {
     );
   }
 
-  ShowRightPanel(context) {
+  showRightPanel(context) {
     return Column(
       children: [
         Expanded(
@@ -87,7 +88,7 @@ class SelectPhotoScreen extends StatelessWidget {
                       //! Send base64 string to Backend and store it on original image variable
                       if (canContinue.value) {
                         try {
-                          var response = await Dio().post(
+                          await Dio().post(
                             'http://localhost:5071/api/image',
                             data: {
                               'base64ImageData': imageNotifier.value,

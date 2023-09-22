@@ -9,21 +9,19 @@ import 'package:flutter/services.dart';
 class HistogramScreen extends StatelessWidget {
   static String route = "HistogramScreen";
   final ValueNotifier<String> imageNotifier;
-  // final ValueNotifier<bool> isLoading;
-  // final ValueNotifier<int> operationIndex;
-  // ignore: prefer_const_constructors_in_immutables
+
   HistogramScreen(this.imageNotifier, {super.key});
 
-  List<String> dropdownOperations = [
+  final List<String> dropdownOperations = [
     'Show Histogram',
     'Histogram Equalization',
     'Histogram Quantization'
   ];
 
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
-  ValueNotifier<int> operationIndex = ValueNotifier(0);
-  ValueNotifier<bool> canContinue = ValueNotifier(false);
-  ValueNotifier<bool> isGray = ValueNotifier(true);
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<int> operationIndex = ValueNotifier(0);
+  final ValueNotifier<bool> canContinue = ValueNotifier(false);
+  final ValueNotifier<bool> isGray = ValueNotifier(true);
 
   Map<int, int> histogramRed = {
     0: 0,
@@ -39,11 +37,11 @@ class HistogramScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ShowPhotoLayout(
-          leftChilds(), rightChilds(context), 'Histogram Operations'),
+          leftChildren(), rightChildren(context), 'Histogram Operations'),
     );
   }
 
-  leftChilds() {
+  leftChildren() {
     return ValueListenableBuilder(
       valueListenable: isLoading,
       builder: ((context, value, child) {
@@ -87,7 +85,7 @@ class HistogramScreen extends StatelessWidget {
     );
   }
 
-  rightChilds(BuildContext context) {
+  rightChildren(BuildContext context) {
     ValueNotifier<String> selectedItem = ValueNotifier(dropdownOperations[0]);
     TextEditingController textController = TextEditingController();
     return Column(
@@ -229,7 +227,7 @@ class HistogramScreen extends StatelessWidget {
                             //! Send base64 string to Backend and store it on original image variable
                             if (canContinue.value) {
                               try {
-                                var response = await Dio().post(
+                                await Dio().post(
                                   'http://localhost:5071/api/image/NextPage',
                                   data: {
                                     'base64ImageData': imageNotifier.value

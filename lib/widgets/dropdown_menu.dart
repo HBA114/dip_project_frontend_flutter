@@ -5,11 +5,13 @@ import 'package:flutter/material.dart';
 class CustomDropDown extends StatefulWidget {
   List<String> itemList;
   final ValueNotifier<int> operationIndex;
+
   CustomDropDown(this.itemList, this.operationIndex, {super.key});
 
   @override
   // ignore: no_logic_in_create_state
   State<CustomDropDown> createState() =>
+      // ignore: no_logic_in_create_state
       _CustomDropDownState(itemList, operationIndex);
 }
 

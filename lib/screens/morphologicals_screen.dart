@@ -4,26 +4,30 @@ import 'package:dio/dio.dart';
 import 'package:dip_project_frontend/layouts/show_photo_layout.dart';
 import 'package:dip_project_frontend/screens/save_image_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class MorphologicalsScreen extends StatelessWidget {
   static String route = "MorphologicalsScreen";
   final ValueNotifier<String> imageNotifier;
+
   MorphologicalsScreen(this.imageNotifier, {super.key});
 
-  List<String> dropdownOperations = ['Erosion', 'Dilation', 'Skeletonization'];
+  final List<String> dropdownOperations = [
+    'Erosion',
+    'Dilation',
+    'Skeletonization'
+  ];
 
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
-  ValueNotifier<int> operationIndex = ValueNotifier(0);
-  ValueNotifier<bool> canContinue = ValueNotifier(false);
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<int> operationIndex = ValueNotifier(0);
+  final ValueNotifier<bool> canContinue = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
     return ShowPhotoLayout(
-        leftChilds(), rightChilds(context), 'Morphologicals');
+        leftChildren(), rightChildren(context), 'Morphologicals');
   }
 
-  leftChilds() {
+  leftChildren() {
     return ValueListenableBuilder(
       valueListenable: isLoading,
       builder: ((context, value, child) {
@@ -38,9 +42,9 @@ class MorphologicalsScreen extends StatelessWidget {
     );
   }
 
-  rightChilds(BuildContext context) {
+  rightChildren(BuildContext context) {
     ValueNotifier<String> selectedItem = ValueNotifier(dropdownOperations[0]);
-    TextEditingController textController = TextEditingController();
+
     return Column(
       children: <Widget>[
         Expanded(
@@ -69,34 +73,6 @@ class MorphologicalsScreen extends StatelessWidget {
             ),
           ),
         ),
-        // ValueListenableBuilder(
-        //   valueListenable: operationIndex,
-        //   builder: (context, value, child) {
-        //     return Expanded(
-        //       child: operationIndex.value == -1
-        //           ? SizedBox(
-        //               width: 200,
-        //               child: TextField(
-        //                 controller: textController,
-        //                 decoration: const InputDecoration(
-        //                   label: Text("Tone Count"),
-        //                   border: OutlineInputBorder(),
-        //                 ),
-        //                 // keyboardType: TextInputType.number,
-        //                 autocorrect: false,
-        //                 enableSuggestions: false,
-        //                 inputFormatters: [
-        //                   FilteringTextInputFormatter(
-        //                     RegExp(r'[0-9]'),
-        //                     allow: true,
-        //                   ),
-        //                 ],
-        //               ),
-        //             )
-        //           : Container(),
-        //     );
-        //   },
-        // ),
         Expanded(
           child: Row(
             children: [
@@ -143,7 +119,7 @@ class MorphologicalsScreen extends StatelessWidget {
                             //! Send base64 string to Backend and store it on original image variable
                             if (canContinue.value) {
                               try {
-                                var response = await Dio().post(
+                                await Dio().post(
                                   'http://localhost:5071/api/image/NextPage',
                                   data: {
                                     'base64ImageData': imageNotifier.value

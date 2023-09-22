@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:isolate';
 
 import 'package:dio/dio.dart';
 import 'package:dip_project_frontend/layouts/show_photo_layout.dart';
@@ -10,29 +9,29 @@ import 'package:flutter/services.dart';
 class ColorFilterScreen extends StatelessWidget {
   static String route = "ColorFilterScreen";
   final ValueNotifier<String> imageNotifier;
-  // final ValueNotifier<bool> isLoading;
-  // final ValueNotifier<int> operationIndex;
+
   ColorFilterScreen(this.imageNotifier, {super.key});
 
-  List<String> dropdownOperations = [
+  final List<String> dropdownOperations = [
     // 'Select An Option',
     'Gray Scale',
-    'Black&White With Treshold',
+    'Black&White With Threshold',
     'Leave It As Is'
   ];
 
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
-  ValueNotifier<int> operationIndex = ValueNotifier(0);
-  ValueNotifier<bool> canContinue = ValueNotifier(false);
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<int> operationIndex = ValueNotifier(0);
+  final ValueNotifier<bool> canContinue = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ShowPhotoLayout(leftChilds(), rightChilds(context), 'Color Filter'),
+      body: ShowPhotoLayout(
+          leftChildren(), rightChildren(context), 'Color Filter'),
     );
   }
 
-  leftChilds() {
+  leftChildren() {
     return ValueListenableBuilder(
       valueListenable: isLoading,
       builder: ((context, value, child) {
@@ -47,7 +46,7 @@ class ColorFilterScreen extends StatelessWidget {
     );
   }
 
-  rightChilds(BuildContext context) {
+  rightChildren(BuildContext context) {
     ValueNotifier<String> selectedItem = ValueNotifier(dropdownOperations[0]);
     TextEditingController textController = TextEditingController();
     return Column(
@@ -90,7 +89,7 @@ class ColorFilterScreen extends StatelessWidget {
                       child: TextField(
                         controller: textController,
                         decoration: const InputDecoration(
-                          label: Text("Treshold Value"),
+                          label: Text("Threshold Value"),
                           border: OutlineInputBorder(),
                         ),
                         // keyboardType: TextInputType.number,
@@ -126,7 +125,7 @@ class ColorFilterScreen extends StatelessWidget {
                             data: {
                               'operationType': operationIndex.value,
                               // ignore: unnecessary_null_comparison
-                              'tresholdValue': textController.text != null
+                              'thresholdValue': textController.text != null
                                   ? int.tryParse(textController.text)
                                   : 0
                             },
@@ -157,7 +156,7 @@ class ColorFilterScreen extends StatelessWidget {
                             //! Send base64 string to Backend and store it on original image variable
                             if (canContinue.value) {
                               try {
-                                var response = await Dio().post(
+                                await Dio().post(
                                   'http://localhost:5071/api/image/NextPage',
                                   data: {
                                     'base64ImageData': imageNotifier.value

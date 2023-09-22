@@ -11,7 +11,7 @@ class FiltersScreen extends StatelessWidget {
   final ValueNotifier<String> imageNotifier;
   FiltersScreen(this.imageNotifier, {super.key});
 
-  List<String> dropdownOperations = [
+  final List<String> dropdownOperations = [
     'Gaussian Blur Filter',
     'Sharpening Filter',
     'Edge Detect Filter',
@@ -20,20 +20,20 @@ class FiltersScreen extends StatelessWidget {
     'Contra Harmonical Filter'
   ];
 
-  List<String> filterSizes = ['3x3', '5x5', '9x9'];
-  List<int> filterSizeValues = [3, 5, 9];
+  final List<String> filterSizes = ['3x3', '5x5', '9x9'];
+  final List<int> filterSizeValues = [3, 5, 9];
 
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
-  ValueNotifier<int> operationIndex = ValueNotifier(0);
-  ValueNotifier<int> filterIndex = ValueNotifier(0);
-  ValueNotifier<bool> canContinue = ValueNotifier(false);
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<int> operationIndex = ValueNotifier(0);
+  final ValueNotifier<int> filterIndex = ValueNotifier(0);
+  final ValueNotifier<bool> canContinue = ValueNotifier(false);
 
   @override
   Widget build(BuildContext context) {
-    return ShowPhotoLayout(leftChilds(), rightChilds(context), 'Filters');
+    return ShowPhotoLayout(leftChildren(), rightChildren(context), 'Filters');
   }
 
-  leftChilds() {
+  leftChildren() {
     return ValueListenableBuilder(
       valueListenable: isLoading,
       builder: ((context, value, child) {
@@ -48,7 +48,7 @@ class FiltersScreen extends StatelessWidget {
     );
   }
 
-  rightChilds(BuildContext context) {
+  rightChildren(BuildContext context) {
     ValueNotifier<String> selectedItem = ValueNotifier(dropdownOperations[0]);
     ValueNotifier<String> selectedFilterSize = ValueNotifier(filterSizes[0]);
     TextEditingController textController = TextEditingController();
@@ -90,7 +90,7 @@ class FiltersScreen extends StatelessWidget {
                       child: TextField(
                         controller: textController,
                         decoration: const InputDecoration(
-                          label: Text("Standart Deviation"),
+                          label: Text("Standard Deviation"),
                           border: OutlineInputBorder(),
                         ),
                         // keyboardType: TextInputType.number,
@@ -151,7 +151,7 @@ class FiltersScreen extends StatelessWidget {
                               'filterType': operationIndex.value,
                               // ignore: unnecessary_null_comparison
                               'filterSize': filterSizeValues[filterIndex.value],
-                              'standartDeviation': textController.text != null
+                              'standardDeviation': textController.text != null
                                   ? int.tryParse(textController.text)
                                   : 0
                             },
@@ -182,7 +182,7 @@ class FiltersScreen extends StatelessWidget {
                             //! Send base64 string to Backend and store it on original image variable
                             if (canContinue.value) {
                               try {
-                                var response = await Dio().post(
+                                await Dio().post(
                                   'http://localhost:5071/api/image/NextPage',
                                   data: {
                                     'base64ImageData': imageNotifier.value
