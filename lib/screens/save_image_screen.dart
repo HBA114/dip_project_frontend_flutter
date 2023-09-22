@@ -4,24 +4,24 @@ import 'package:dio/dio.dart';
 import 'package:dip_project_frontend/layouts/show_photo_layout.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class SaveImageScreen extends StatelessWidget {
   static String route = "SaveImageScreen";
   final ValueNotifier<String> imageNotifier;
   SaveImageScreen(this.imageNotifier, {super.key});
 
-  List<String> dropdownOperations = ['jpeg', 'jpg', 'png', 'bmp'];
+  final List<String> dropdownOperations = ['jpeg', 'jpg', 'png', 'bmp'];
 
-  ValueNotifier<bool> isLoading = ValueNotifier(false);
-  ValueNotifier<int> operationIndex = ValueNotifier(0);
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+  final ValueNotifier<int> operationIndex = ValueNotifier(0);
 
   @override
   Widget build(BuildContext context) {
-    return ShowPhotoLayout(leftChilds(), rightChilds(context), 'Save Image');
+    return ShowPhotoLayout(
+        leftChildren(), rightChildren(context), 'Save Image');
   }
 
-  leftChilds() {
+  leftChildren() {
     return ValueListenableBuilder(
       valueListenable: isLoading,
       builder: ((context, value, child) {
@@ -36,9 +36,9 @@ class SaveImageScreen extends StatelessWidget {
     );
   }
 
-  rightChilds(BuildContext context) {
+  rightChildren(BuildContext context) {
     ValueNotifier<String> selectedItem = ValueNotifier(dropdownOperations[0]);
-    TextEditingController textController = TextEditingController();
+
     return Column(
       children: <Widget>[
         Expanded(
@@ -85,7 +85,7 @@ class SaveImageScreen extends StatelessWidget {
                               await getSavePath(suggestedName: fileName);
                           isLoading.value = true;
                           if (path != null) {
-                            var response = await Dio().post(
+                            await Dio().post(
                               'http://localhost:5071/api/image/SaveFile',
                               data: {
                                 'base64ImageData': imageNotifier.value,
